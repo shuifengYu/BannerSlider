@@ -1,5 +1,6 @@
 package com.bannerslider.coder_yu.bannerslider;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 public class BannerFragment extends Fragment {
 
     private static final String PARAM_IMAGES = "images";
+    private static final String PARAM_CONFIG = "config";
     private static final String TAG = "BannerFragment";
 
     private ViewPager mViewPager;
@@ -33,21 +35,38 @@ public class BannerFragment extends Fragment {
     private int lastPosition;
     private boolean pageChanged;
     private OnBannerClickedListener mListener;
+    private UIConfig mUiConfig;
 
-    public interface OnBannerClickedListener{
+    public interface OnBannerClickedListener {
         void onClicked(BannerEntity bannerEntity);
     }
 
-    public void setOnBannerClickedListener(OnBannerClickedListener listener){
+    public void setOnBannerClickedListener(OnBannerClickedListener listener) {
         this.mListener = listener;
     }
+
     public static BannerFragment newInstance(ArrayList<BannerEntity> imagePathList) {
+        return newInstance(imagePathList, new UIConfig.Builder().build());
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof OnBannerClickedListener){
+            this.mListener = (OnBannerClickedListener)context;
+        }else{
+            throw IllegalArgumentException("");
+        }
+    }
+
+    public static BannerFragment newInstance(ArrayList<BannerEntity> imagePathList, UIConfig config) {
         if (CollectionsUitl.isEmpty(imagePathList)) {
             return null;
         }
         BannerFragment fragment = new BannerFragment();
         Bundle args = new Bundle();
         args.putSerializable(PARAM_IMAGES, imagePathList);
+        args.putSerializable(PARAM_CONFIG, config);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,6 +76,7 @@ public class BannerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             imagePaths = (ArrayList<BannerEntity>) getArguments().getSerializable(PARAM_IMAGES);
+            mUiConfig = (UIConfig) getArguments().getSerializable(PARAM_CONFIG);
             if (CollectionsUitl.isEmpty(imagePaths)) {
                 return;
             }
@@ -115,9 +135,9 @@ public class BannerFragment extends Fragment {
 
     private void setIndicateSelected(int position) {
         for (ImageView imageView : indicates) {
-            imageView.setSelected(false);
+            imageView.setBackgroundResource(mUiConfig.indicateUnSelected);
         }
-        indicates.get(position - 1).setSelected(true);
+        indicates.get(position - 1).setBackgroundResource(mUiConfig.indicateSelectedRes);
     }
 
     private void initIndicateLine() {
@@ -132,7 +152,7 @@ public class BannerFragment extends Fragment {
             int margin = (int) DpAndPxUtil.dp2px(getActivity(), 2);
             params.setMargins(margin, margin, margin, margin);
             imageView.setLayoutParams(params);
-            imageView.setBackgroundResource(R.drawable.aide_selector_indicate);
+            imageView.setBackgroundResource(mUiConfig.indicateUnSelected);
             indicateLine.addView(imageView);
             indicates.add(imageView);
         }
@@ -158,8 +178,7 @@ public class BannerFragment extends Fragment {
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    startActivity(ActWebview.newIntent(getActivity(), "曹操专车", imagePaths.get(position).url));
-                    if(mListener == null){
+                    if (mListener == null) {
                         return;
                     }
                     mListener.onClicked(imagePaths.get(position));
@@ -167,7 +186,8 @@ public class BannerFragment extends Fragment {
             });
             imageView.setLayoutParams(new ViewGroup.LayoutParams(
                     ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.MATCH_PARENT));
-            Glide.with(getActivity()).load(imagePaths.get(position).imageUrl).placeholder(R.drawable.aide_banner_img_def).into(imageView);
+            Glide.with(getActivity()).load(imagePaths.get(position).imageUrl)
+                    .placeholder(mUiConfig.imageLoadingRes).error(mUiConfig.imageLoadFailed).into(imageView);
             container.addView(imageView);
             return imageView;
         }

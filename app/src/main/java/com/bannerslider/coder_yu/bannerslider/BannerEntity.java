@@ -12,9 +12,15 @@ public class BannerEntity implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public BannerEntity() {
+    public String url;
+
+    @Override
+    public String toString() {
+        return "BannerEntity{" +
+                "url='" + url + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
     }
 
-    public String url;
     public String imageUrl;
 }
