@@ -1,8 +1,9 @@
-package com.bannerslider.coder_yu.bannerslider;
+package com.coder_yu.bannerslider;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+
 
 import java.util.ArrayList;
 

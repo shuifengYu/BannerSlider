@@ -1,4 +1,4 @@
-package com.bannerslider.coder_yu.utils;
+package com.coder_yu.bannerslider.utils;
 
 import java.util.Collection;
 
