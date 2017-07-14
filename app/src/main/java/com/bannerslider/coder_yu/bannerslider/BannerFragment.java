@@ -55,9 +55,10 @@ public class BannerFragment extends Fragment {
         if(context instanceof OnBannerClickedListener){
             this.mListener = (OnBannerClickedListener)context;
         }else{
-            throw new IllegalArgumentException("activity start bannerfragment must implemente interface OnBannerClickedListener");
+            throw new   RuntimeException("activity start bannerfragment must implemente interface OnBannerClickedListener");
         }
     }
+
 
     public static BannerFragment newInstance(ArrayList<BannerEntity> imagePathList, UIConfig config) {
         if (CollectionsUitl.isEmpty(imagePathList)) {
