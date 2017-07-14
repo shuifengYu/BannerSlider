@@ -55,7 +55,7 @@ public class BannerFragment extends Fragment {
         if(context instanceof OnBannerClickedListener){
             this.mListener = (OnBannerClickedListener)context;
         }else{
-            throw IllegalArgumentException("");
+            throw new IllegalArgumentException("activity start bannerfragment must implemente interface OnBannerClickedListener");
         }
     }
 
