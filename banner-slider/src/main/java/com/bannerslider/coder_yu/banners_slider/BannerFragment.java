@@ -2,6 +2,7 @@ package com.bannerslider.coder_yu.banners_slider;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
@@ -37,6 +38,9 @@ public class BannerFragment extends Fragment {
     private OnBannerClickedListener mListener;
     private UIConfig mUiConfig;
 
+    private Handler mHandler;
+    private Runnable mRunnable;
+
     public interface OnBannerClickedListener {
         void onClicked(BannerEntity bannerEntity);
     }
@@ -52,10 +56,10 @@ public class BannerFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof OnBannerClickedListener){
-            this.mListener = (OnBannerClickedListener)context;
-        }else{
-            throw new   RuntimeException("activity start bannerfragment must implemente interface OnBannerClickedListener");
+        if (context instanceof OnBannerClickedListener) {
+            this.mListener = (OnBannerClickedListener) context;
+        } else {
+            throw new RuntimeException("activity start bannerfragment must implemente interface OnBannerClickedListener");
         }
     }
 
@@ -95,6 +99,19 @@ public class BannerFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mHandler = new Handler();
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                int curr = mViewPager.getCurrentItem();
+                Log.d(TAG,"runnable run,curr="+curr);
+                if (mViewPager == null) {
+                    return;
+                }
+                mViewPager.setCurrentItem(curr + 1, true);
+                scheduleNextBannerSliding();
+            }
+        };
         indicateLine = (LinearLayout) view.findViewById(R.id.fm_banner_indicateline);
         initIndicateLine();
         mViewPager = (ViewPager) view.findViewById(R.id.fm_banner_viewpager);
@@ -132,6 +149,15 @@ public class BannerFragment extends Fragment {
         });
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setCurrentItem(1);
+        scheduleNextBannerSliding();
+    }
+
+    private void scheduleNextBannerSliding() {
+        Log.d(TAG,"scheduleNextBannerSliding");
+        if (mHandler == null || mRunnable == null) {
+            return;
+        }
+        mHandler.postDelayed(mRunnable, mUiConfig.duration);
     }
 
     private void setIndicateSelected(int position) {
@@ -157,11 +183,8 @@ public class BannerFragment extends Fragment {
             indicateLine.addView(imageView);
             indicates.add(imageView);
         }
-
-        indicates.get(0).setSelected(true);
-
+        setIndicateSelected(1);
     }
-
 
     class BannerPagerAdapter extends PagerAdapter {
 
@@ -208,5 +231,13 @@ public class BannerFragment extends Fragment {
             return object == view;
         }
 
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mHandler != null) {
+            mHandler.removeCallbacks(mRunnable);
+        }
+        super.onDestroy();
     }
 }
