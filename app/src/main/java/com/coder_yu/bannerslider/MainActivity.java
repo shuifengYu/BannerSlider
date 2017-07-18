@@ -1,6 +1,7 @@
 package com.coder_yu.bannerslider;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -53,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements BannerFragment.On
 
     @Override
     public void onClicked(BannerEntity bannerEntity) {
+
         Toast.makeText(getBaseContext(), "banner:" + bannerEntity, Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this,MainActivity.class));
     }
 }
