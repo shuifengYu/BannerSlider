@@ -5,8 +5,8 @@ publish {
     userOrg = 'coderyu'      //bintray注册的用户名
     groupId = 'com.coder_yu'         //compile引用时的第1部分groupId
     artifactId = 'banner-slider'     //compile引用时的第2部分项目名
-    publishVersion = '0.0.9'    //compile引用时的第3部分版本号
-    desc = '图片缩放模式改成CENTER_CROP'
+    publishVersion = '0.0.10'    //compile引用时的第3部分版本号
+    desc = 'BannerEntity implements Parcelable'
     website = 'https://github.com/shuifengYu/BannerSlider'
 }
 android {
@@ -16,8 +16,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 9
-        versionName "0.0.9"
+        versionCode 10
+        versionName "0.0.10"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
