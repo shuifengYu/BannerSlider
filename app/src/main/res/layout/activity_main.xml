@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bannerslider.coder_yu.bannerslider.MainActivity">
+    tools:mContext="com.bannerslider.coder_yu.bannerslider.MainActivity">
 
     <FrameLayout
         android:background="#f0f"

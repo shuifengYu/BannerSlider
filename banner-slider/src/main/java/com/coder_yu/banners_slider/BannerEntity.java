@@ -1,4 +1,4 @@
-package com.bannerslider.coder_yu.banners_slider;
+package com.coder_yu.banners_slider;
 
 import java.io.Serializable;
 

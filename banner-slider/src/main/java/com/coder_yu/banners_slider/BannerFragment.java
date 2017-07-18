@@ -1,4 +1,4 @@
-package com.bannerslider.coder_yu.banners_slider;
+package com.coder_yu.banners_slider;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,9 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bannerslider.coder_yu.banners_slider.utils.CollectionsUitl;
-import com.bannerslider.coder_yu.banners_slider.utils.DpAndPxUtil;
+import com.bannerslider.coder_yu.banners_slider.R;
 import com.bumptech.glide.Glide;
+import com.coder_yu.banners_slider.utils.CollectionsUitl;
+import com.coder_yu.banners_slider.utils.DpAndPxUtil;
 
 import java.util.ArrayList;
 
@@ -58,8 +59,6 @@ public class BannerFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnBannerClickedListener) {
             this.mListener = (OnBannerClickedListener) context;
-        } else {
-            throw new RuntimeException("activity start bannerfragment must implemente interface OnBannerClickedListener");
         }
     }
 
@@ -239,5 +238,10 @@ public class BannerFragment extends Fragment {
             mHandler.removeCallbacks(mRunnable);
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 }

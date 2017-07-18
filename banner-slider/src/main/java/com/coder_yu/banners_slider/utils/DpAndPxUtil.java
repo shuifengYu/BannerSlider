@@ -1,4 +1,4 @@
-package com.bannerslider.coder_yu.banners_slider.utils;
+package com.coder_yu.banners_slider.utils;
 
 import android.content.Context;
 import android.util.TypedValue;

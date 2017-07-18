@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.bannerslider.coder_yu.banners_slider.BannerEntity;
-import com.bannerslider.coder_yu.banners_slider.BannerFragment;
+import com.coder_yu.banners_slider.BannerEntity;
+import com.coder_yu.banners_slider.BannerFragment;
 
 import java.util.ArrayList;
 

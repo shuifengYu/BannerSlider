@@ -1,4 +1,6 @@
-package com.bannerslider.coder_yu.banners_slider;
+package com.coder_yu.banners_slider;
+
+import com.bannerslider.coder_yu.banners_slider.R;
 
 import java.io.Serializable;
 
@@ -20,6 +22,7 @@ public class UIConfig implements Serializable {
      * unit：millisecond
      */
     public int duration;
+
     private UIConfig(Builder builder) {
         this.imageLoadFailed = builder.imageLoadFailedRes;
         this.imageLoadingRes = builder.imageLoadingRes;
@@ -29,13 +32,14 @@ public class UIConfig implements Serializable {
         this.duration = builder.duration;
     }
 
-    static class Builder {
+    public static class Builder {
         private int imageLoadingRes;
         private int imageLoadFailedRes;
         private boolean isRecycled;
         private int indicateUnSelectedRes;
         private int indicateSelectedRes;
         public int duration;
+
         public Builder() {
             this.imageLoadFailedRes = R.drawable.img_load_failed;
             this.imageLoadingRes = R.drawable.img_loading;
@@ -50,6 +54,10 @@ public class UIConfig implements Serializable {
             return this;
         }
 
+        public Builder duration(int duration) {
+            this.duration = duration;
+            return this;
+        }
 
         public Builder imageLoadFailedRes(int imageLoadFailedRes) {
             this.imageLoadFailedRes = imageLoadFailedRes;
