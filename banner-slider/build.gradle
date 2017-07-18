@@ -6,7 +6,7 @@ publish {
     groupId = 'com.coder_yu'         //compile引用时的第1部分groupId
     artifactId = 'banner-slider'     //compile引用时的第2部分项目名
     publishVersion = '0.0.9'    //compile引用时的第3部分版本号
-    desc = 'adapt the occasion of only one banner'
+    desc = '图片缩放模式改成CENTER_CROP'
     website = 'https://github.com/shuifengYu/BannerSlider'
 }
 android {
