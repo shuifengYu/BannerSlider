@@ -31,7 +31,7 @@ public class BannerFragment extends Fragment {
     private ViewPager mViewPager;
     private BannerPagerAdapter mPagerAdapter;
 
-    private ArrayList<BannerEntity> imagePaths;
+    private ArrayList<BannerEntity> mBannerList;
     private ArrayList<ImageView> indicates;
     private LinearLayout indicateLine;
     private int lastPosition;
@@ -41,6 +41,7 @@ public class BannerFragment extends Fragment {
 
     private Handler mHandler;
     private Runnable mRunnable;
+    private boolean autoSliding = false;
 
     public interface OnBannerClickedListener {
         void onClicked(BannerEntity bannerEntity);
@@ -54,15 +55,6 @@ public class BannerFragment extends Fragment {
         return newInstance(imagePathList, new UIConfig.Builder().build());
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnBannerClickedListener) {
-            this.mListener = (OnBannerClickedListener) context;
-        }
-    }
-
-
     public static BannerFragment newInstance(ArrayList<BannerEntity> imagePathList, UIConfig config) {
         if (CollectionsUitl.isEmpty(imagePathList)) {
             return null;
@@ -75,17 +67,23 @@ public class BannerFragment extends Fragment {
         return fragment;
     }
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnBannerClickedListener) {
+            this.mListener = (OnBannerClickedListener) context;
+        }
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            imagePaths = (ArrayList<BannerEntity>) getArguments().getSerializable(PARAM_IMAGES);
+            mBannerList = (ArrayList<BannerEntity>) getArguments().getSerializable(PARAM_IMAGES);
             mUiConfig = (UIConfig) getArguments().getSerializable(PARAM_CONFIG);
-            if (CollectionsUitl.isEmpty(imagePaths)) {
-                return;
-            }
-            imagePaths.add(imagePaths.get(0));
-            imagePaths.add(0, imagePaths.get(imagePaths.size() - 2));
+            decorateBanners(mBannerList);
         }
     }
 
@@ -104,23 +102,24 @@ public class BannerFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mHandler = new Handler();
-        mRunnable = new Runnable() {
-            @Override
-            public void run() {
-                int curr = mViewPager.getCurrentItem();
-                Log.d(TAG,"runnable run,curr="+curr);
-                if (mViewPager == null) {
-                    return;
-                }
-                mViewPager.setCurrentItem(curr + 1, true);
-                scheduleNextBannerSliding();
-            }
-        };
         indicateLine = (LinearLayout) view.findViewById(R.id.fm_banner_indicateline);
         initIndicateLine();
+        if (autoSliding) {
+            mHandler = new Handler();
+            mRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    if (mViewPager == null) {
+                        return;
+                    }
+                    int curr = mViewPager.getCurrentItem();
+                    mViewPager.setCurrentItem(curr + 1, true);
+                    scheduleNextBannerSliding();
+                }
+            };
+        }
         mViewPager = (ViewPager) view.findViewById(R.id.fm_banner_viewpager);
-        mPagerAdapter = new BannerPagerAdapter(imagePaths);
+        mPagerAdapter = new BannerPagerAdapter(mBannerList);
         mViewPager.setAdapter(mPagerAdapter);
         mPagerAdapter.notifyDataSetChanged();
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -138,12 +137,12 @@ public class BannerFragment extends Fragment {
             @Override
             public void onPageScrollStateChanged(int state) {
                 if (pageChanged && state == ViewPager.SCROLL_STATE_IDLE) {
-                    if (lastPosition == imagePaths.size() - 1) {
+                    if (lastPosition == mBannerList.size() - 1) {
                         mViewPager.setCurrentItem(1, false);
                         setIndicateSelected(1);
                     } else if (lastPosition == 0) {
-                        mViewPager.setCurrentItem(imagePaths.size() - 2, false);
-                        setIndicateSelected(imagePaths.size() - 2);
+                        mViewPager.setCurrentItem(mBannerList.size() - 2, false);
+                        setIndicateSelected(mBannerList.size() - 2);
                     } else {
                         setIndicateSelected(lastPosition);
                     }
@@ -157,11 +156,14 @@ public class BannerFragment extends Fragment {
     }
 
     private void initIndicateLine() {
-        if (CollectionsUitl.isEmpty(imagePaths)) {
+        if (CollectionsUitl.getSize(mBannerList) <= 1) {
+            indicateLine.setVisibility(View.GONE);
+            autoSliding = false;
             return;
         }
+        indicateLine.removeAllViews();
         indicates = new ArrayList();
-        for (int i = 0; i < imagePaths.size() - 2; i++) {
+        for (int i = 0; i < mBannerList.size() - 2; i++) {
             ImageView imageView = new ImageView(getContext());
             int border = (int) DpAndPxUtil.dp2px(getActivity(), 4);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(border, border);
@@ -173,16 +175,20 @@ public class BannerFragment extends Fragment {
             indicates.add(imageView);
         }
         setIndicateSelected(1);
+        autoSliding = true;
     }
 
     private void scheduleNextBannerSliding() {
+        if (!autoSliding) {
+            return;
+        }
         if (mHandler == null || mRunnable == null) {
             return;
         }
         mHandler.postDelayed(mRunnable, mUiConfig.duration);
     }
 
-    private void stopBannerSliding(){
+    private void stopBannerSliding() {
         if (mHandler == null || mRunnable == null) {
             return;
         }
@@ -202,13 +208,36 @@ public class BannerFragment extends Fragment {
         stopBannerSliding();
     }
 
+//    public void updateBanners(ArrayList<BannerEntity> bannerList) {
+//        stopBannerSliding();
+//        this.mBannerList = new ArrayList<>();
+//        this.mBannerList.addAll(bannerList);
+//        decorateBanners(mBannerList);
+//        mPagerAdapter.setDatas(mBannerList);
+//        initIndicateLine();
+//        scheduleNextBannerSliding();
+//        mPagerAdapter.notifyDataSetChanged();
+//    }
+
+    public void decorateBanners(ArrayList<BannerEntity> bannerList) {
+        if (CollectionsUitl.getSize(bannerList) <= 1) {
+            return;
+        }
+        bannerList.add(bannerList.get(0));
+        bannerList.add(0, bannerList.get(bannerList.size() - 2));
+    }
+
     class BannerPagerAdapter extends PagerAdapter {
 
-        private ArrayList<BannerEntity> imagePaths;
+        private ArrayList<BannerEntity> mDatas;
 
-        public BannerPagerAdapter(ArrayList<BannerEntity> imagePaths) {
-            this.imagePaths = imagePaths;
+        public BannerPagerAdapter(ArrayList<BannerEntity> mDatas) {
+            this.mDatas = mDatas;
         }
+
+//        public void setDatas(ArrayList<BannerEntity> imagePaths){
+//            this.mDatas = imagePaths;
+//        }
 
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
@@ -221,12 +250,12 @@ public class BannerFragment extends Fragment {
                     if (mListener == null) {
                         return;
                     }
-                    mListener.onClicked(imagePaths.get(position));
+                    mListener.onClicked(mDatas.get(position));
                 }
             });
             imageView.setLayoutParams(new ViewGroup.LayoutParams(
                     ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.MATCH_PARENT));
-            Glide.with(getActivity()).load(imagePaths.get(position).imageUrl)
+            Glide.with(getActivity()).load(mDatas.get(position).imageUrl)
                     .placeholder(mUiConfig.imageLoadingRes).error(mUiConfig.imageLoadFailed).into(imageView);
             container.addView(imageView);
             return imageView;
@@ -239,7 +268,7 @@ public class BannerFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return imagePaths.size();
+            return mDatas.size();
         }
 
         @Override

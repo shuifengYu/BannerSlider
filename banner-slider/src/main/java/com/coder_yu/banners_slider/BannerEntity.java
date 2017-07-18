@@ -1,5 +1,7 @@
 package com.coder_yu.banners_slider;
 
+import android.net.Uri;
+
 import java.io.Serializable;
 
 /**
@@ -7,7 +9,7 @@ import java.io.Serializable;
  */
 
 public class BannerEntity implements Serializable {
-    public BannerEntity(String url, String imageUrl) {
+    public BannerEntity(String url, Uri imageUrl) {
         this.url = url;
         this.imageUrl = imageUrl;
     }
@@ -22,5 +24,5 @@ public class BannerEntity implements Serializable {
                 '}';
     }
 
-    public String imageUrl;
+    public Uri imageUrl;
 }
