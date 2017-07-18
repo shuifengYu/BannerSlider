@@ -96,6 +96,12 @@ public class BannerFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        scheduleNextBannerSliding();
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mHandler = new Handler();
@@ -148,22 +154,6 @@ public class BannerFragment extends Fragment {
         });
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setCurrentItem(1);
-        scheduleNextBannerSliding();
-    }
-
-    private void scheduleNextBannerSliding() {
-        Log.d(TAG,"scheduleNextBannerSliding");
-        if (mHandler == null || mRunnable == null) {
-            return;
-        }
-        mHandler.postDelayed(mRunnable, mUiConfig.duration);
-    }
-
-    private void setIndicateSelected(int position) {
-        for (ImageView imageView : indicates) {
-            imageView.setBackgroundResource(mUiConfig.indicateUnSelected);
-        }
-        indicates.get(position - 1).setBackgroundResource(mUiConfig.indicateSelectedRes);
     }
 
     private void initIndicateLine() {
@@ -183,6 +173,33 @@ public class BannerFragment extends Fragment {
             indicates.add(imageView);
         }
         setIndicateSelected(1);
+    }
+
+    private void scheduleNextBannerSliding() {
+        if (mHandler == null || mRunnable == null) {
+            return;
+        }
+        mHandler.postDelayed(mRunnable, mUiConfig.duration);
+    }
+
+    private void stopBannerSliding(){
+        if (mHandler == null || mRunnable == null) {
+            return;
+        }
+        mHandler.removeCallbacks(mRunnable);
+    }
+
+    private void setIndicateSelected(int position) {
+        for (ImageView imageView : indicates) {
+            imageView.setBackgroundResource(mUiConfig.indicateUnSelected);
+        }
+        indicates.get(position - 1).setBackgroundResource(mUiConfig.indicateSelectedRes);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        stopBannerSliding();
     }
 
     class BannerPagerAdapter extends PagerAdapter {
@@ -232,16 +249,4 @@ public class BannerFragment extends Fragment {
 
     }
 
-    @Override
-    public void onDestroy() {
-        if (mHandler != null) {
-            mHandler.removeCallbacks(mRunnable);
-        }
-        super.onDestroy();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
 }
