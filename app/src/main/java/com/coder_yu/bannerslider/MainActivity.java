@@ -23,7 +23,14 @@ public class MainActivity extends AppCompatActivity implements BannerFragment.On
         final ArrayList<BannerEntity> imagesEntityList = new ArrayList<>();
         imagesEntityList.add(new BannerEntity("http://www.baidu.com", getUri(R.drawable.img_loading)));
         imagesEntityList.add(new BannerEntity("http://www.baidu.com", Uri.parse("http://img4.imgtn.bdimg.com/it/u=1551505495,801926913&fm=26&gp=0.jpg")));
-        UIConfig uiConfig = new UIConfig.Builder().indicatesMarginBottomDP(20).build();
+        UIConfig uiConfig = new UIConfig.Builder()
+                .imageLoadFailedRes(R.drawable.img_load_failed)
+                .imageLoadingRes(R.drawable.img_loading)
+                .indicatesMarginBottomDP(10)
+                .duration(5000)
+                .indicateSelectedRes(R.drawable.aide_shape_indicate_selected)
+                .indicateUnSelectedRes(R.drawable.aide_shape_indicate_selected)
+                .build();
         BannerFragment fragment = BannerFragment.newInstance(imagesEntityList,uiConfig);
 
         addFragment(fragment);
