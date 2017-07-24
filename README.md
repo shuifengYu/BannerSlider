@@ -6,20 +6,22 @@ BannerSlider主要用来滑动显示图片集，比如banner图，应用介绍�
 
 使用
 
-step 1:添加gradle依赖
+#### step 1:添加gradle依赖
 
+```
     compile 'com.coder_yu.banner-slider:0.0.12'
+```
 
-Step 2:添加权限
-
+#### Step 2:添加权限
+```
     <!-- if you want to load images from the internet -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- if you want to load images from a file OR from the internet -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-step 3:使用
-
+```
+#### step 3:使用
+```
     UIConfig uiConfig = new UIConfig.Builder()
                     .imageLoadFailedRes(R.drawable.img_load_failed)
                     .imageLoadingRes(R.drawable.img_loading)
@@ -30,6 +32,6 @@ step 3:使用
                     .build();
     BannerFragment fragment = BannerFragment.newInstance(imagesEntityList,uiConfig);
     getSupportFragmentManager().beginTransaction().replace(R.id.main_banner_container, fragment).commit();
-
+```
 
 ![a](example.jpg)
