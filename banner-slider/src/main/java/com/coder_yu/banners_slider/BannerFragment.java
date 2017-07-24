@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -41,6 +42,7 @@ public class BannerFragment extends Fragment {
 
     private Handler mHandler;
     private Runnable mRunnable;
+    private Context mContext;
     private boolean autoSliding = false;
 
     public interface OnBannerClickedListener {
@@ -74,6 +76,7 @@ public class BannerFragment extends Fragment {
         if (context instanceof OnBannerClickedListener) {
             this.mListener = (OnBannerClickedListener) context;
         }
+        this.mContext = context;
     }
 
 
@@ -161,6 +164,10 @@ public class BannerFragment extends Fragment {
             autoSliding = false;
             return;
         }
+        FrameLayout.LayoutParams p = (FrameLayout.LayoutParams) indicateLine.getLayoutParams();
+        int marginBottom = (int)DpAndPxUtil.dp2px(mContext,mUiConfig.indicatesMarginBottomDP);
+        p.setMargins(0,0,0,marginBottom);
+        indicateLine.setLayoutParams(p);
         indicateLine.removeAllViews();
         indicates = new ArrayList();
         for (int i = 0; i < mBannerList.size() - 2; i++) {
@@ -168,7 +175,7 @@ public class BannerFragment extends Fragment {
             int border = (int) DpAndPxUtil.dp2px(getActivity(), 4);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(border, border);
             int margin = (int) DpAndPxUtil.dp2px(getActivity(), 2);
-            params.setMargins(margin, margin, margin, margin);
+            params.setMargins(margin, 0, margin, 0);
             imageView.setLayoutParams(params);
             imageView.setBackgroundResource(mUiConfig.indicateUnSelected);
             indicateLine.addView(imageView);

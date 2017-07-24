@@ -16,6 +16,11 @@ public class UIConfig implements Serializable {
     public boolean isRecycled;
     public int indicateUnSelected;
     public int indicateSelectedRes;
+    /**
+     * the marginbottom value of the indicate line
+     * unit (px)
+     */
+    public int indicatesMarginBottomDP;
 
     /**
      * time the banner stays
@@ -30,6 +35,7 @@ public class UIConfig implements Serializable {
         this.indicateSelectedRes = builder.indicateSelectedRes;
         this.indicateUnSelected = builder.indicateUnSelectedRes;
         this.duration = builder.duration;
+        this.indicatesMarginBottomDP =builder.indicatesMarginBottomDP;
     }
 
     public static class Builder {
@@ -38,7 +44,8 @@ public class UIConfig implements Serializable {
         private boolean isRecycled;
         private int indicateUnSelectedRes;
         private int indicateSelectedRes;
-        public int duration;
+        private int duration;
+        private int indicatesMarginBottomDP;
 
         public Builder() {
             this.imageLoadFailedRes = R.drawable.img_load_failed;
@@ -47,6 +54,14 @@ public class UIConfig implements Serializable {
             this.indicateUnSelectedRes = R.drawable.aide_shape_indicate_unselected;
             this.isRecycled = true;
             this.duration = DURATION;
+            this.indicatesMarginBottomDP = 10;
+        }
+
+
+
+        public Builder indicatesMarginBottomDP(int imageLoadingRes) {
+            this.indicatesMarginBottomDP = imageLoadingRes;
+            return this;
         }
 
         public Builder imageLoadingRes(int imageLoadingRes) {
