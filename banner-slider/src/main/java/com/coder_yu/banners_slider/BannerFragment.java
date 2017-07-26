@@ -19,6 +19,7 @@ import com.bannerslider.coder_yu.banners_slider.R;
 import com.bumptech.glide.Glide;
 import com.coder_yu.banners_slider.utils.CollectionsUitl;
 import com.coder_yu.banners_slider.utils.DpAndPxUtil;
+import com.coder_yu.banners_slider.widget.AutoSlidingViewPager;
 
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ public class BannerFragment extends Fragment {
     private static final String PARAM_CONFIG = "config";
     private static final String TAG = "BannerFragment";
 
-    private ViewPager mViewPager;
+    private AutoSlidingViewPager mViewPager;
     private BannerPagerAdapter mPagerAdapter;
 
     private ArrayList<BannerEntity> mBannerList;
@@ -121,7 +122,18 @@ public class BannerFragment extends Fragment {
                 }
             };
         }
-        mViewPager = (ViewPager) view.findViewById(R.id.fm_banner_viewpager);
+        mViewPager = (AutoSlidingViewPager) view.findViewById(R.id.fm_banner_viewpager);
+        mViewPager.setActionListener(new AutoSlidingViewPager.ActionListener() {
+            @Override
+            public void onActionDown() {
+                stopBannerSliding();
+            }
+
+            @Override
+            public void onActionUp() {
+                scheduleNextBannerSliding();
+            }
+        });
         mPagerAdapter = new BannerPagerAdapter(mBannerList);
         mViewPager.setAdapter(mPagerAdapter);
         mPagerAdapter.notifyDataSetChanged();
@@ -132,7 +144,6 @@ public class BannerFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
-                Log.d(TAG, "onPageSelected position=" + position);
                 lastPosition = position;
                 pageChanged = true;
             }
