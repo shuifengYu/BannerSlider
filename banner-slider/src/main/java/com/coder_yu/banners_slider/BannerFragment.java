@@ -179,7 +179,10 @@ public class BannerFragment extends Fragment {
         }
         FrameLayout.LayoutParams p = (FrameLayout.LayoutParams) indicateLine.getLayoutParams();
         int marginBottom = (int)DpAndPxUtil.dp2px(mContext,mUiConfig.indicatesMarginBottomDP);
-        p.setMargins(0,0,0,marginBottom);
+        int marginLeft = (int)DpAndPxUtil.dp2px(mContext,mUiConfig.indicatesMarginLeftDP);
+        int marginRight = (int)DpAndPxUtil.dp2px(mContext,mUiConfig.indicatesMarginRightDP);
+        p.setMargins(marginLeft,0,marginRight,marginBottom);
+        p.gravity = mUiConfig.indicatesGravity;
         indicateLine.setLayoutParams(p);
         indicateLine.removeAllViews();
         indicates = new ArrayList();
@@ -273,6 +276,7 @@ public class BannerFragment extends Fragment {
                     mListener.onClicked(mDatas.get(position));
                 }
             });
+            imageView.setScaleType(mUiConfig.scaleType);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(
                     ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.MATCH_PARENT));
             Glide.with(getActivity()).load(mDatas.get(position).imageUrl)

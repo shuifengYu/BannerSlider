@@ -1,5 +1,8 @@
 package com.coder_yu.banners_slider;
 
+import android.view.Gravity;
+import android.widget.ImageView;
+
 import com.bannerslider.coder_yu.banners_slider.R;
 
 import java.io.Serializable;
@@ -25,6 +28,18 @@ public class UIConfig implements Serializable {
     public int indicatesMarginBottomDP;
 
     /**
+     * the marginRight value of the indicate line
+     * unit (px)
+     */
+    public int indicatesMarginRightDP;
+
+    /**
+     * the marginLeft value of the indicate line
+     * unit (px)
+     */
+    public int indicatesMarginLeftDP;
+
+    /**
      * time the banner stays
      * unit：millisecond
      */
@@ -33,7 +48,20 @@ public class UIConfig implements Serializable {
     /**
      * 滑动到下一页花费的时间
      */
-    public int slidingTime ;
+    public int slidingTime;
+
+
+    /**
+     * 导航条的位置
+     * {@link Gravity}
+     */
+    public int indicatesGravity;
+
+    /**
+     * 图片的缩放类型
+     * {@link ImageView.ScaleType}
+     */
+    public ImageView.ScaleType scaleType;
 
     private UIConfig(Builder builder) {
         this.imageLoadFailed = builder.imageLoadFailedRes;
@@ -43,7 +71,11 @@ public class UIConfig implements Serializable {
         this.indicateUnSelected = builder.indicateUnSelectedRes;
         this.duration = builder.duration;
         this.slidingTime = builder.slidingTime;
-        this.indicatesMarginBottomDP =builder.indicatesMarginBottomDP;
+        this.indicatesMarginBottomDP = builder.indicatesMarginBottomDP;
+        this.indicatesMarginLeftDP = builder.indicatesMarginLeftDP;
+        this.indicatesMarginRightDP = builder.indicatesMarginRightDP;
+        this.indicatesGravity = builder.indicatesGravity;
+        this.scaleType = builder.scaleType;
     }
 
     public static class Builder {
@@ -54,7 +86,11 @@ public class UIConfig implements Serializable {
         private int indicateSelectedRes;
         private int duration;
         private int indicatesMarginBottomDP;
+        private int indicatesMarginRightDP;
+        private int indicatesMarginLeftDP;
+        private int indicatesGravity;
         private int slidingTime;
+        private ImageView.ScaleType scaleType;
 
         public Builder() {
             this.imageLoadFailedRes = R.drawable.img_load_failed;
@@ -65,8 +101,34 @@ public class UIConfig implements Serializable {
             this.duration = DURATION;
             this.indicatesMarginBottomDP = 10;
             this.slidingTime = SLIDING_TIME;
+            this.indicatesMarginLeftDP =10;
+            this.indicatesMarginRightDP = 10;
+            this.indicatesGravity = Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;
+            this.scaleType = ImageView.ScaleType.CENTER_CROP;
         }
 
+        public Builder scaleType(ImageView.ScaleType scaleType) {
+            this.scaleType = scaleType;
+            return this;
+        }
+
+
+        public Builder indicatesMarginLeftDP(int indicatesMarginLeftDP) {
+            this.indicatesMarginLeftDP = indicatesMarginLeftDP;
+            return this;
+        }
+
+
+        public Builder indicatesMarginRightDP(int indicatesMarginRightDP) {
+            this.indicatesMarginRightDP = indicatesMarginRightDP;
+            return this;
+        }
+
+
+        public Builder indicatesGravity(int indicatesGravity) {
+            this.indicatesGravity = indicatesGravity;
+            return this;
+        }
 
 
         public Builder indicatesMarginBottomDP(int imageLoadingRes) {
