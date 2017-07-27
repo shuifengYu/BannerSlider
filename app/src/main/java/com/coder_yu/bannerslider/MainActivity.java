@@ -28,8 +28,7 @@ public class MainActivity extends AppCompatActivity implements BannerFragment.On
                 .imageLoadingRes(R.drawable.img_loading)
                 .indicatesMarginBottomDP(10)
                 .duration(5000)
-                .indicateSelectedRes(R.drawable.aide_shape_indicate_selected)
-                .indicateUnSelectedRes(R.drawable.aide_shape_indicate_selected)
+                .slidingTime(300)
                 .build();
         BannerFragment fragment = BannerFragment.newInstance(imagesEntityList,uiConfig);
 

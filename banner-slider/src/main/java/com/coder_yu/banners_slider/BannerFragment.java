@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import com.bannerslider.coder_yu.banners_slider.R;
 import com.bumptech.glide.Glide;
 import com.coder_yu.banners_slider.utils.CollectionsUitl;
+import com.coder_yu.banners_slider.utils.ViewPagerUtil;
 import com.coder_yu.banners_slider.utils.DpAndPxUtil;
 import com.coder_yu.banners_slider.widget.AutoSlidingViewPager;
 
@@ -123,6 +124,7 @@ public class BannerFragment extends Fragment {
             };
         }
         mViewPager = (AutoSlidingViewPager) view.findViewById(R.id.fm_banner_viewpager);
+        ViewPagerUtil.controlViewPagerSpeed(mViewPager,mUiConfig.slidingTime);
         mViewPager.setActionListener(new AutoSlidingViewPager.ActionListener() {
             @Override
             public void onActionDown() {

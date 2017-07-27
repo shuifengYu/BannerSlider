@@ -10,12 +10,14 @@ import java.io.Serializable;
 
 public class UIConfig implements Serializable {
 
-    static int DURATION = 5000;
+    public static int DURATION = 5000;
+    public static int SLIDING_TIME = 300;
     public int imageLoadingRes;
     public int imageLoadFailed;
     public boolean isRecycled;
     public int indicateUnSelected;
     public int indicateSelectedRes;
+
     /**
      * the marginbottom value of the indicate line
      * unit (px)
@@ -28,6 +30,11 @@ public class UIConfig implements Serializable {
      */
     public int duration;
 
+    /**
+     * 滑动到下一页花费的时间
+     */
+    public int slidingTime ;
+
     private UIConfig(Builder builder) {
         this.imageLoadFailed = builder.imageLoadFailedRes;
         this.imageLoadingRes = builder.imageLoadingRes;
@@ -35,6 +42,7 @@ public class UIConfig implements Serializable {
         this.indicateSelectedRes = builder.indicateSelectedRes;
         this.indicateUnSelected = builder.indicateUnSelectedRes;
         this.duration = builder.duration;
+        this.slidingTime = builder.slidingTime;
         this.indicatesMarginBottomDP =builder.indicatesMarginBottomDP;
     }
 
@@ -46,6 +54,7 @@ public class UIConfig implements Serializable {
         private int indicateSelectedRes;
         private int duration;
         private int indicatesMarginBottomDP;
+        private int slidingTime;
 
         public Builder() {
             this.imageLoadFailedRes = R.drawable.img_load_failed;
@@ -55,6 +64,7 @@ public class UIConfig implements Serializable {
             this.isRecycled = true;
             this.duration = DURATION;
             this.indicatesMarginBottomDP = 10;
+            this.slidingTime = SLIDING_TIME;
         }
 
 
@@ -71,6 +81,11 @@ public class UIConfig implements Serializable {
 
         public Builder duration(int duration) {
             this.duration = duration;
+            return this;
+        }
+
+        public Builder slidingTime(int slidingTime) {
+            this.slidingTime = slidingTime;
             return this;
         }
 
