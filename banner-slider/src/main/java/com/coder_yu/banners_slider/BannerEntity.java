@@ -9,22 +9,33 @@ import android.os.Parcelable;
  */
 
 public class BannerEntity implements Parcelable {
-    public BannerEntity(String url, Uri imageUrl) {
-        this.url = url;
-        this.imageUrl = imageUrl;
+    public Uri imageUri;
+    public String url;
+    public int type;
+
+    public BannerEntity(String url, Uri imageUri) {
+        this(url, imageUri, 0);
     }
 
-    public String url;
+    public BannerEntity(String url, Uri imageUri, int type) {
+        this.url = url;
+        this.imageUri = imageUri;
+        this.type = type;
+    }
+
 
     @Override
     public String toString() {
         return "BannerEntity{" +
                 "url='" + url + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
+                ", imageUri='" + imageUri + '\'' +
                 '}';
     }
 
-    public Uri imageUrl;
+    protected BannerEntity(Parcel in) {
+        this.url = in.readString();
+        this.imageUri = in.readParcelable(Uri.class.getClassLoader());
+    }
 
     @Override
     public int describeContents() {
@@ -34,12 +45,7 @@ public class BannerEntity implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.url);
-        dest.writeParcelable(this.imageUrl, flags);
-    }
-
-    protected BannerEntity(Parcel in) {
-        this.url = in.readString();
-        this.imageUrl = in.readParcelable(Uri.class.getClassLoader());
+        dest.writeParcelable(this.imageUri, flags);
     }
 
     public static final Creator<BannerEntity> CREATOR = new Creator<BannerEntity>() {

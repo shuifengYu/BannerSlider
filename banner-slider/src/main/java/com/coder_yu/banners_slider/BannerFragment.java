@@ -11,15 +11,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bannerslider.coder_yu.banners_slider.R;
-import com.bumptech.glide.Glide;
 import com.coder_yu.banners_slider.utils.CollectionsUitl;
-import com.coder_yu.banners_slider.utils.ViewPagerUtil;
 import com.coder_yu.banners_slider.utils.DpAndPxUtil;
+import com.coder_yu.banners_slider.utils.ViewPagerUtil;
 import com.coder_yu.banners_slider.widget.AutoSlidingViewPager;
 
 import java.util.ArrayList;
@@ -124,7 +124,16 @@ public class BannerFragment extends Fragment {
             };
         }
         mViewPager = (AutoSlidingViewPager) view.findViewById(R.id.fm_banner_viewpager);
-        ViewPagerUtil.controlViewPagerSpeed(mViewPager,mUiConfig.slidingTime);
+        ViewPagerUtil.controlViewPagerSpeed(mViewPager, mUiConfig.slidingTime,new DecelerateInterpolator());
+//        ViewPagerUtil.controlViewPagerSpeed(mViewPager, mUiConfig.slidingTime,new Interpolator(){
+//
+//            @Override
+//            public float getInterpolation(float input) {
+//                float res = (float)Math.log(input);
+//                Log.i(TAG,"input="+input+",res="+res);
+//                return res;
+//            }
+//        });
         mViewPager.setActionListener(new AutoSlidingViewPager.ActionListener() {
             @Override
             public void onActionDown() {
@@ -178,10 +187,10 @@ public class BannerFragment extends Fragment {
             return;
         }
         FrameLayout.LayoutParams p = (FrameLayout.LayoutParams) indicateLine.getLayoutParams();
-        int marginBottom = (int)DpAndPxUtil.dp2px(mContext,mUiConfig.indicatesMarginBottomDP);
-        int marginLeft = (int)DpAndPxUtil.dp2px(mContext,mUiConfig.indicatesMarginLeftDP);
-        int marginRight = (int)DpAndPxUtil.dp2px(mContext,mUiConfig.indicatesMarginRightDP);
-        p.setMargins(marginLeft,0,marginRight,marginBottom);
+        int marginBottom = (int) DpAndPxUtil.dp2px(mContext, mUiConfig.indicatesMarginBottomDP);
+        int marginLeft = (int) DpAndPxUtil.dp2px(mContext, mUiConfig.indicatesMarginLeftDP);
+        int marginRight = (int) DpAndPxUtil.dp2px(mContext, mUiConfig.indicatesMarginRightDP);
+        p.setMargins(marginLeft, 0, marginRight, marginBottom);
         p.gravity = mUiConfig.indicatesGravity;
         indicateLine.setLayoutParams(p);
         indicateLine.removeAllViews();
@@ -265,8 +274,7 @@ public class BannerFragment extends Fragment {
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
             Log.d(TAG, "instantiateItem position=" + position);
-            final ImageView imageView = new ImageView(getActivity());
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            final ImageView imageView = mUiConfig.imageLoader.createImageView(getContext());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -276,11 +284,9 @@ public class BannerFragment extends Fragment {
                     mListener.onClicked(mDatas.get(position));
                 }
             });
-            imageView.setScaleType(mUiConfig.scaleType);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(
                     ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.MATCH_PARENT));
-            Glide.with(getActivity()).load(mDatas.get(position).imageUrl)
-                    .placeholder(mUiConfig.imageLoadingRes).error(mUiConfig.imageLoadFailed).into(imageView);
+            mUiConfig.imageLoader.displayImage(imageView, mDatas.get(position).imageUri);
             container.addView(imageView);
             return imageView;
         }

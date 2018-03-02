@@ -1,9 +1,9 @@
 package com.coder_yu.banners_slider;
 
 import android.view.Gravity;
-import android.widget.ImageView;
 
 import com.bannerslider.coder_yu.banners_slider.R;
+import com.coder_yu.banners_slider.loader.ImageLoaderInterface;
 
 import java.io.Serializable;
 
@@ -15,11 +15,10 @@ public class UIConfig implements Serializable {
 
     public static int DURATION = 5000;
     public static int SLIDING_TIME = 300;
-    public int imageLoadingRes;
-    public int imageLoadFailed;
     public boolean isRecycled;
     public int indicateUnSelected;
     public int indicateSelectedRes;
+
 
     /**
      * the marginbottom value of the indicate line
@@ -57,15 +56,9 @@ public class UIConfig implements Serializable {
      */
     public int indicatesGravity;
 
-    /**
-     * 图片的缩放类型
-     * {@link ImageView.ScaleType}
-     */
-    public ImageView.ScaleType scaleType;
+    public ImageLoaderInterface imageLoader;
 
     private UIConfig(Builder builder) {
-        this.imageLoadFailed = builder.imageLoadFailedRes;
-        this.imageLoadingRes = builder.imageLoadingRes;
         this.isRecycled = builder.isRecycled;
         this.indicateSelectedRes = builder.indicateSelectedRes;
         this.indicateUnSelected = builder.indicateUnSelectedRes;
@@ -75,12 +68,12 @@ public class UIConfig implements Serializable {
         this.indicatesMarginLeftDP = builder.indicatesMarginLeftDP;
         this.indicatesMarginRightDP = builder.indicatesMarginRightDP;
         this.indicatesGravity = builder.indicatesGravity;
-        this.scaleType = builder.scaleType;
+        this.imageLoader = builder.imageLoader;
     }
 
     public static class Builder {
-        private int imageLoadingRes;
-        private int imageLoadFailedRes;
+//        private int imageLoadingRes;
+//        private int imageLoadFailedRes;
         private boolean isRecycled;
         private int indicateUnSelectedRes;
         private int indicateSelectedRes;
@@ -90,11 +83,9 @@ public class UIConfig implements Serializable {
         private int indicatesMarginLeftDP;
         private int indicatesGravity;
         private int slidingTime;
-        private ImageView.ScaleType scaleType;
+        private ImageLoaderInterface imageLoader;
 
         public Builder() {
-            this.imageLoadFailedRes = R.drawable.img_load_failed;
-            this.imageLoadingRes = R.drawable.img_loading;
             this.indicateSelectedRes = R.drawable.aide_shape_indicate_selected;
             this.indicateUnSelectedRes = R.drawable.aide_shape_indicate_unselected;
             this.isRecycled = true;
@@ -104,14 +95,13 @@ public class UIConfig implements Serializable {
             this.indicatesMarginLeftDP =10;
             this.indicatesMarginRightDP = 10;
             this.indicatesGravity = Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;
-            this.scaleType = ImageView.ScaleType.CENTER_CROP;
+            this.imageLoader = null;
         }
 
-        public Builder scaleType(ImageView.ScaleType scaleType) {
-            this.scaleType = scaleType;
+        public Builder imageLoader(ImageLoaderInterface imageLoader){
+            this.imageLoader = imageLoader;
             return this;
         }
-
 
         public Builder indicatesMarginLeftDP(int indicatesMarginLeftDP) {
             this.indicatesMarginLeftDP = indicatesMarginLeftDP;
@@ -136,11 +126,6 @@ public class UIConfig implements Serializable {
             return this;
         }
 
-        public Builder imageLoadingRes(int imageLoadingRes) {
-            this.imageLoadingRes = imageLoadingRes;
-            return this;
-        }
-
         public Builder duration(int duration) {
             this.duration = duration;
             return this;
@@ -150,12 +135,6 @@ public class UIConfig implements Serializable {
             this.slidingTime = slidingTime;
             return this;
         }
-
-        public Builder imageLoadFailedRes(int imageLoadFailedRes) {
-            this.imageLoadFailedRes = imageLoadFailedRes;
-            return this;
-        }
-
 
         public Builder recycled(boolean recycled) {
             isRecycled = recycled;
@@ -175,6 +154,9 @@ public class UIConfig implements Serializable {
         }
 
         public UIConfig build() {
+            if(this.imageLoader == null){
+                throw new RuntimeException("you must give a imageloader to display the image!");
+            }
             return new UIConfig(this);
         }
     }
